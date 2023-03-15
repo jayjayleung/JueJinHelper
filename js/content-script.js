@@ -30,17 +30,16 @@ function findPins() {
         const authorId = element.parentNode.parentNode.firstChild.getAttribute('data-author-id');
         //用户头像
         const headImg = document.querySelector('.pin-action-row>.action-box').parentNode.parentNode.querySelector('.pin-header > .account-group > div > a > img').getAttribute('src');
-        let markEle = '';
-        markEle += '<div '+datav+' class="share-action action plus-mark" id="'+eleId+'">';
-        markEle += '<div '+datav+' class="action-title-box">';
-        // markEle += '<span '+datav+' class="icon normal-icon share-icon">'
-        markEle += '<span '+datav+' >'
-        markEle += '<span style="position: relative;top: 2px;"><svg t="1678073933723" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3825" width="16" height="16"><path d="M512 832c-156.448 0-296.021333-98.730667-418.410667-291.605333a52.938667 52.938667 0 0 1 0-56.789334C215.978667 290.730667 355.552 192 512 192c156.448 0 296.021333 98.730667 418.410667 291.605333a52.938667 52.938667 0 0 1 0 56.789334C808.021333 733.269333 668.448 832 512 832z m0-576c-129.514667 0-249.461333 83.850667-360.117333 256C262.538667 684.149333 382.485333 768 512 768c129.514667 0 249.461333-83.850667 360.117333-256C761.461333 339.850667 641.514667 256 512 256z m0 405.333333c-83.210667 0-150.666667-66.858667-150.666667-149.333333S428.789333 362.666667 512 362.666667s150.666667 66.858667 150.666667 149.333333S595.210667 661.333333 512 661.333333z m0-64c47.552 0 86.101333-38.208 86.101333-85.333333S559.552 426.666667 512 426.666667c-47.552 0-86.101333 38.208-86.101333 85.333333s38.549333 85.333333 86.101333 85.333333z" fill="#8a8a8a" p-id="3826"></path></svg></span>';
-        // markEle += '<span  style="position: relative;top: 2px;"><svg t="1678074042740" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4234" width="16" height="16"><path d="M512 192c156.448 0 296.021333 98.730667 418.410667 291.605333a52.938667 52.938667 0 0 1 0 56.789334C808.021333 733.269333 668.448 832 512 832c-156.448 0-296.021333-98.730667-418.410667-291.605333a52.938667 52.938667 0 0 1 0-56.789334C215.978667 290.730667 355.552 192 512 192z m0 128c-106.037333 0-192 85.962667-192 192s85.962667 192 192 192 192-85.962667 192-192-85.962667-192-192-192z m0 320c70.688 0 128-57.312 128-128s-57.312-128-128-128-128 57.312-128 128 57.312 128 128 128z" fill="#1296db" p-id="4235"></path></svg></span>';
-        markEle += '</span> ';
-        markEle += '<span '+datav+' class="action-title">插眼</span>';
-        markEle += '</div>';
-        markEle += '</div>';
+        //用户名称
+        const userName = pinEle.querySelector('.username').innerText;
+        //岗位
+        const post = pinEle.querySelector('.meta-box > .position').innerText;
+        //时间元素
+        const timeEle = pinEle.querySelector('.meta-box > a > time');
+        const datetime = timeEle.getAttribute('datetime');
+        const dateFormat = timeEle.getAttribute('title');
+        const dateStr = timeEle.innerText;
+        let markEle = getMarkEle(eleId,datav,false);
         // console.log(markEle);
        
         /**
@@ -50,12 +49,38 @@ function findPins() {
             afterend:在 element 元素的后面。
          */
         firstEle.insertAdjacentHTML('beforebegin', markEle);
-        const markObj = {pid:pinId,authorId:authorId,headImg:headImg};
+        const markObj = {
+            pinId,
+            authorId,
+            headImg,
+            userName,
+            datetime,
+            dateFormat,
+            dateStr,
+            pinEle
+        };
         document.getElementById(eleId).addEventListener('click',function(e){
             markFunc(e,markObj)
         });
 
     }
+}
+
+function getMarkEle(eleId,datav,active){
+    let markEle = '';
+    markEle += `<div ${datav} class="share-action action plus-mark" id="${eleId}">`;
+    markEle += `<div ${datav} class="action-title-box">`;
+    markEle += `<span ${datav} >`;
+    if(active){
+        markEle += `<span  style="position: relative;top: 2px;"><svg t="1678074042740" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4234" width="16" height="16"><path d="M512 192c156.448 0 296.021333 98.730667 418.410667 291.605333a52.938667 52.938667 0 0 1 0 56.789334C808.021333 733.269333 668.448 832 512 832c-156.448 0-296.021333-98.730667-418.410667-291.605333a52.938667 52.938667 0 0 1 0-56.789334C215.978667 290.730667 355.552 192 512 192z m0 128c-106.037333 0-192 85.962667-192 192s85.962667 192 192 192 192-85.962667 192-192-85.962667-192-192-192z m0 320c70.688 0 128-57.312 128-128s-57.312-128-128-128-128 57.312-128 128 57.312 128 128 128z" fill="#1296db" p-id="4235"></path></svg></span>`;
+    }else{
+        markEle += `<span style="position: relative;top: 2px;"><svg t="1678073933723" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3825" width="16" height="16"><path d="M512 832c-156.448 0-296.021333-98.730667-418.410667-291.605333a52.938667 52.938667 0 0 1 0-56.789334C215.978667 290.730667 355.552 192 512 192c156.448 0 296.021333 98.730667 418.410667 291.605333a52.938667 52.938667 0 0 1 0 56.789334C808.021333 733.269333 668.448 832 512 832z m0-576c-129.514667 0-249.461333 83.850667-360.117333 256C262.538667 684.149333 382.485333 768 512 768c129.514667 0 249.461333-83.850667 360.117333-256C761.461333 339.850667 641.514667 256 512 256z m0 405.333333c-83.210667 0-150.666667-66.858667-150.666667-149.333333S428.789333 362.666667 512 362.666667s150.666667 66.858667 150.666667 149.333333S595.210667 661.333333 512 661.333333z m0-64c47.552 0 86.101333-38.208 86.101333-85.333333S559.552 426.666667 512 426.666667c-47.552 0-86.101333 38.208-86.101333 85.333333s38.549333 85.333333 86.101333 85.333333z" fill="#8a8a8a" p-id="3826"></path></svg></span>`;
+    }
+    markEle += `</span> `;
+    markEle += `<span ${datav} class="action-title">插眼</span>`;
+    markEle += `</div>`;
+    markEle += `</div>`;
+    return markEle;
 }
 
 
